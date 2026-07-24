@@ -13,7 +13,8 @@ const appointmentResponse = (appointment) => {
 
         doctor: appointment.doctor && {
             id: appointment.doctor._id,
-            name: appointment.doctor.name
+            name: appointment.doctor.userId?.name,
+            specialization: appointment.doctor.specialization,
         },
 
         appointmentDate: appointment.appointmentDate,

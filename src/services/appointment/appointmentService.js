@@ -89,9 +89,13 @@ export const createAppointmentService = async (data, userId) => {
             path: "patient",
             select: "patientId name phone"
         },
-        {
+            {
             path: "doctor",
-            select: "name"
+            select: "specialization userId",
+            populate: {
+                path: "userId",
+                select: "name",
+            },
         }
     ]);
 
@@ -112,7 +116,11 @@ export const getAllAppointmentsService = async () => {
         })
         .populate({
             path: "doctor",
-            select: "name"
+            select: "specialization userId",
+            populate: {
+                path: "userId",
+                select: "name",
+            },
         })
         .sort({
             appointmentDate: 1,
@@ -132,7 +140,11 @@ export const getAppointmentByIdService = async (id) => {
         })
         .populate({
             path: "doctor",
-            select: "name"
+            select: "specialization userId",
+            populate: {
+                path: "userId",
+                select: "name",
+            },
         });
 
     if (!appointment || !appointment.isActive) {
@@ -237,7 +249,11 @@ export const updateAppointmentService = async (
         },
         {
             path: "doctor",
-            select: "name"
+            select: "specialization userId",
+            populate: {
+                path: "userId",
+                select: "name",
+            },
         }
     ]);
 
@@ -413,7 +429,11 @@ export const getAppointmentService = async ({
         })
         .populate({
             path: "doctor",
-            select: "name specialization",
+            select: "specialization userId",
+            populate: {
+                path: "userId",
+                select: "name",
+            },
         });
 
     if (!appointment || !appointment.isActive) {
@@ -493,9 +513,13 @@ export const cancelAppointmentService = async (
             path: "patient",
             select: "patientId name phone"
         },
-        {
+       {
             path: "doctor",
-            select: "name"
+            select: "specialization userId",
+            populate: {
+                path: "userId",
+                select: "name",
+            },
         }
     ]);
 
@@ -549,7 +573,11 @@ export const searchAppointmentsService = async ({
         })
         .populate({
             path: "doctor",
-            select: "name specialization",
+            select: "specialization userId",
+            populate: {
+                path: "userId",
+                select: "name",
+            },
         })
         .sort({
             appointmentDate: 1,
@@ -713,7 +741,11 @@ export const rescheduleAppointmentService = async ({
         },
         {
             path: "doctor",
-            select: "name",
+            select: "specialization userId",
+            populate: {
+                path: "userId",
+                select: "name",
+            },
         },
     ]);
 
@@ -773,7 +805,11 @@ export const cancelPublicAppointmentService = async ({
         },
         {
             path: "doctor",
-            select: "name",
+            select: "specialization userId",
+            populate: {
+                path: "userId",
+                select: "name",
+            },
         },
     ]);
 
