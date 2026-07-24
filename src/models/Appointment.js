@@ -43,7 +43,8 @@ const appointmentSchema = new mongoose.Schema(
             enum: [
                 "Walk-in",
                 "Phone",
-                "Online"
+                "Website",
+                "MCP"
             ],
             default: "Walk-in"
         },
@@ -63,7 +64,7 @@ const appointmentSchema = new mongoose.Schema(
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true
+            required: null
         },
 
         isActive: {

@@ -9,6 +9,7 @@ import {
     getDoctorById,
     updateDoctor,
     deleteDoctor,
+    searchDoctors,
 } from "../../controllers/doctor/doctorController.js";
 
 const router = express.Router();
@@ -19,6 +20,11 @@ router.patch(
     authorize("doctor"),
     updateAvailability
 );
+
+router.get(
+    "/search", 
+    searchDoctors);
+
 router.get(
     "/:id",
     auth,

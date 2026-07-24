@@ -1,6 +1,6 @@
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
-import { getClinicInfo } from "../../../services/ai/clinicService.js";
+import { getClinicInfo } from "../../../services/clinic/clinicService.js";
 
 export const getClinicInfoTool = new DynamicStructuredTool({
 

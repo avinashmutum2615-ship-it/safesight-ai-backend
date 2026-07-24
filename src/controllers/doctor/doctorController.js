@@ -3,7 +3,8 @@ import {
     getAvailableDoctorsService,
     getDoctorByIdService,
     updateDoctorService,
-    deleteDoctorService
+    deleteDoctorService,
+    searchDoctorsService,
 } from "../../services/doctor/doctorService.js";
 
 export async function updateAvailability(req, res) {
@@ -30,7 +31,7 @@ export async function updateAvailability(req, res) {
             message: error.message,
         });
 
-    }
+    } 
 
 }
 
@@ -126,4 +127,26 @@ export async function deleteDoctor(req, res) {
 
     }
 
+}
+
+export async function searchDoctors(req, res) {
+    try {
+        const keyword = req.query.keyword || "";
+
+        const doctors = await searchDoctorsService(keyword);
+
+        res.status(200).json({
+            success: true,
+            total: doctors.length,
+            doctors,
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+
+    }
 }

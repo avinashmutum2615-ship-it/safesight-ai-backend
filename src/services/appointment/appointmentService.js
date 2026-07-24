@@ -31,24 +31,23 @@ export const createAppointmentService = async (data, userId) => {
         throw new Error("Doctor not found.");
     }
 
+    const startOfDay = new Date(data.appointmentDate);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(data.appointmentDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
     const existingAppointment = await Appointment.findOne({
-
         doctor: doctor._id,
-
-        appointmentDate: data.appointmentDate,
-
+        appointmentDate: {
+            $gte: startOfDay,
+            $lte: endOfDay,
+        },
         appointmentTime: data.appointmentTime,
-
         isActive: true,
-
         status: {
-            $nin: [
-                "Cancelled",
-                "Completed",
-                "No Show"
-            ]
-        }
-
+            $nin: ["Cancelled", "Completed", "No Show"],
+        },
     });
 
     if (existingAppointment) {
@@ -57,6 +56,15 @@ export const createAppointmentService = async (data, userId) => {
             "This doctor already has an appointment at the selected time."
         );
 
+    }
+
+    const availableSlots = await getAvailableSlotsService(
+        doctor._id,
+        data.appointmentDate
+    );
+
+    if (!availableSlots.includes(data.appointmentTime)) {
+        throw new Error("Selected time slot is unavailable.");
     }
 
     const appointment = await Appointment.create({

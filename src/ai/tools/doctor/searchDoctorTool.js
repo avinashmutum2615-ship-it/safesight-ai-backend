@@ -2,6 +2,11 @@ import { z } from "zod";
 
 import { createTool } from "../baseTool.js";
 import { searchDoctorsService } from "../../../services/doctor/doctorService.js";
+import {
+    logInfo,
+    logSuccess,
+    logError,
+} from "../../../../utils/logger.js";
 
 export const searchDoctorTool = createTool({
 
@@ -35,13 +40,13 @@ export const searchDoctorTool = createTool({
 
   handler: async ({ keyword }, config) => {
     try {
-        console.log("=== searchDoctorTool ===");
-        console.log("Keyword:", keyword);
+        logInfo("Search Doctor Tool", { keyword });
 
         const doctors = await searchDoctorsService(keyword);
 
-        console.log("Doctors:", doctors);
-
+        logSuccess("Doctor Search Completed", {
+            total: doctors.length,
+        });
         return doctors;
     } catch (error) {
         console.error("Tool Error:", error);

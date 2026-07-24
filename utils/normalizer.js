@@ -34,17 +34,17 @@ export function normalizeGender(gender) {
     const value = gender.trim().toLowerCase();
 
     const map = {
-        m: "M",
-        male: "M",
+        m: "male",
+        male: "male",
 
-        f: "F",
-        female: "F",
+        f: "female",
+        female: "female",
 
-        o: "Other",
-        other: "Other",
+        o: "other",
+        other: "other",
     };
 
-    return map[value] ?? gender;
+    return map[value] ?? value;
 }
 
 export function normalizeDate(date) {
@@ -112,7 +112,13 @@ export function normalizePatient(data) {
 
         bloodGroup: normalizeBloodGroup(data.bloodGroup),
 
-        emergencyContact: normalizePhone(data.emergencyContact),
+        emergencyContact: data.emergencyContact
+        ? {
+            name: normalizeName(data.emergencyContact.name),
+            relation: normalizeString(data.emergencyContact.relation),
+            phone: normalizePhone(data.emergencyContact.phone),
+        }
+        : undefined,
 
         dateOfBirth: normalizeDate(data.dateOfBirth),
     };
