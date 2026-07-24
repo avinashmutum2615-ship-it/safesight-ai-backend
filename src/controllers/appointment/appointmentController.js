@@ -95,7 +95,8 @@ export const updateAppointment = async (req, res) => {
 
         const appointment = await updateAppointmentService(
             req.params.id,
-            req.body
+            req.body,
+            req.user.id
         );
 
         res.json({
@@ -169,13 +170,12 @@ export const getAvailableSlots = async (req, res) => {
 
     try {
 
-        const { doctor, date } = req.query;
+        const { doctorId, date } = req.query;
 
         const slots = await getAvailableSlotsService(
-            doctor,
+            doctorId,
             date
         );
-
         res.json({
 
             success: true,

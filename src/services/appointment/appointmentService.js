@@ -1,8 +1,7 @@
 import Appointment from "../../models/Appointment.js";
-import Patient from "../../models/Patient.js";
 import Doctor from "../../models/Doctor.js";
 import appointmentResponse from "../../../utils/dto/appointmentResponse.js";
-import { getPatientDocument } from "../patient/patientService.js";
+import { getPatientDocument, findOrCreatePatientService } from "../patient/patientService.js";
 
 
 const timeToMinutes = (time) => {
@@ -19,11 +18,7 @@ const minutesToTime = (minutes) => {
 
 export const createAppointmentService = async (data, userId) => {
 
-    const patient = await Patient.findById(data.patient);
-
-    if (!patient || !patient.isActive) {
-        throw new Error("Patient not found.");
-    }
+    const patient = await findOrCreatePatientService(data);
 
     const doctor = await Doctor.findById(data.doctor);
 

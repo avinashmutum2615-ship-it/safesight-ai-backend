@@ -12,11 +12,10 @@ export async function createPatient(req, res) {
 
         const patient = await createPatientService(req.body);
 
-        res.status(201).json({
-            success: true,
-            message: "Patient registered successfully.",
-            patient,
-        });
+    res.status(201).json({
+        success: true,
+        patient: patientResponse(patient),
+    });
 
     } catch (error) {
 
@@ -33,10 +32,10 @@ export async function getAllPatients(req, res) {
 
         const patients = await getAllPatientsService();
 
-        res.json({
-            success: true,
-            patients,
-        });
+    res.json({
+        success: true,
+        patients: patients.map(patientResponse),
+    });
 
     } catch (error) {
 
@@ -55,7 +54,7 @@ export async function getPatientById(req, res) {
 
         res.json({
             success: true,
-            patient,
+            patient: patientResponse(patient),
         });
 
     } catch (error) {

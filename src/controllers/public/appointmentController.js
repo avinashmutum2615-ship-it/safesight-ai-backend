@@ -25,10 +25,10 @@ export async function createPublicAppointment(req, res) {
 
 export async function getAvailableSlots(req, res) {
     try {
-        const { doctor, date } = req.query;
+        const { doctorId, date } = req.query;
 
         const slots = await getAvailableSlotsService(
-            doctor,
+            doctorId,
             date
         );
 

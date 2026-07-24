@@ -25,7 +25,7 @@ export async function createPatientService(data) {
 
     await patient.save();
 
-    return patientResponse(patient);
+    return patient;
 
 }
 
@@ -35,7 +35,7 @@ export async function getAllPatientsService() {
         .find({ isActive: true })
         .sort({ createdAt: -1 });
 
-    return patients.map(patient => patientResponse(patient));
+    return patients;
 
 }
 
@@ -47,7 +47,7 @@ export async function getPatientByIdService(id) {
         throw new Error("Patient not found.");
     }
 
-    return patientResponse(patient);
+    return patient;
 
 }
 
@@ -130,7 +130,7 @@ export async function updatePatientService(id, data) {
 
     await patient.save();
 
-    return patientResponse(patient);
+    return patient;
 
 }
 
@@ -178,4 +178,28 @@ export async function getPatientHistoryService(keyword) {
         patient,
         appointments
     );
+}
+
+export async function findOrCreatePatientService(data) {
+
+    let patient = await Patient.findOne({
+        phone: data.phone,
+        isActive: true,
+    });
+
+    if (patient) {
+        return patient;
+    }
+
+    return await createPatientService({
+        name: data.name,
+        gender: data.gender,
+        dateOfBirth: data.dateOfBirth,
+        phone: data.phone,
+        email: data.email,
+        address: data.address,
+        bloodGroup: data.bloodGroup,
+        emergencyContact: data.emergencyContact,
+    });
+
 }
