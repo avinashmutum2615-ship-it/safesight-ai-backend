@@ -2,7 +2,7 @@ import Appointment from "../../models/Appointment.js";
 import Doctor from "../../models/Doctor.js";
 import appointmentResponse from "../../../utils/dto/appointmentResponse.js";
 import { getPatientDocument, findOrCreatePatientService } from "../patient/patientService.js";
-
+import Patient from "../../models/Patient.js";
 
 const timeToMinutes = (time) => {
     const [hours, minutes] = time.split(":").map(Number);
@@ -646,3 +646,137 @@ export async function startConsultationService(
     return appointment;
 
 }
+
+export const rescheduleAppointmentService = async ({
+    name,
+    phone,
+    appointmentDate,
+    appointmentTime,
+}) => {
+
+    // Find patient using name + phone
+    const patient = await Patient.findOne({
+        name: {
+            $regex: `^${name}$`,
+            $options: "i",
+        },
+        phone,
+        isActive: true,
+    });
+
+    if (!patient) {
+        throw new Error(
+            "Patient not found. Please check the name and registered phone number."
+        );
+    }
+
+    // Find active appointment
+    const appointment = await Appointment.findOne({
+        patient: patient._id,
+        isActive: true,
+        status: {
+            $nin: [
+                "Cancelled",
+                "Completed",
+                "No Show",
+            ],
+        },
+    }).sort({
+        appointmentDate: 1,
+    });
+
+    if (!appointment) {
+        throw new Error("Active appointment not found.");
+    }
+
+    // Check available slots
+    const availableSlots = await getAvailableSlotsService(
+        appointment.doctor,
+        appointmentDate,
+        appointment._id
+    );
+
+    if (!availableSlots.includes(appointmentTime)) {
+        throw new Error("Selected time slot is unavailable.");
+    }
+
+    // Update appointment
+    appointment.appointmentDate = appointmentDate;
+    appointment.appointmentTime = appointmentTime;
+
+    await appointment.save();
+
+    await appointment.populate([
+        {
+            path: "patient",
+            select: "patientId name phone",
+        },
+        {
+            path: "doctor",
+            select: "name",
+        },
+    ]);
+
+    return appointmentResponse(appointment);
+
+};
+
+export const cancelPublicAppointmentService = async ({
+    name,
+    phone,
+}) => {
+
+    // Find patient using name + phone
+    const patient = await Patient.findOne({
+        name: {
+            $regex: `^${name}$`,
+            $options: "i",
+        },
+        phone,
+        isActive: true,
+    });
+
+    if (!patient) {
+        throw new Error(
+            "Patient not found. Please check the name and registered phone number."
+        );
+    }
+
+    // Find active appointment
+    const appointment = await Appointment.findOne({
+        patient: patient._id,
+        isActive: true,
+        status: {
+            $nin: [
+                "Cancelled",
+                "Completed",
+                "No Show",
+            ],
+        },
+    }).sort({
+        appointmentDate: 1,
+    });
+
+    if (!appointment) {
+        throw new Error("Active appointment not found.");
+    }
+
+    // Cancel appointment
+    appointment.status = "Cancelled";
+
+    await appointment.save();
+
+    await appointment.populate([
+        {
+            path: "patient",
+            select: "patientId name phone",
+        },
+        {
+            path: "doctor",
+            select: "name",
+        },
+    ]);
+
+    return appointmentResponse(appointment);
+
+};

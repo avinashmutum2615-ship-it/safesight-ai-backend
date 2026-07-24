@@ -6,7 +6,7 @@ import {
     deleteAppointmentService,
     searchAppointmentsService,
     getAvailableSlotsService,
-    getDashboardService
+    getDashboardService,
 } from "../../services/appointment/appointmentService.js";
 
 
