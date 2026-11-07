@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "AI Assistant for SafeSight Clinic",
   "main": "src/server.js",
-   "scripts": {
+  "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "seed-admin": "node scripts/adminSeed.js"
+    "dev": "node --watch src/server.js",
+    "seed-admin": "node scripts/adminSeed.js",
+    "test": "node --test test/*.test.js",
+    "seed-clinic": "node scripts/clinicSeed.js",
+    "test:integration": "node --test integration/*.test.js",
+    "ingest-knowledge": "node src/ai/rag/ingest.js"
   },
   "keywords": [],
   "author": "",
@@ -22,10 +26,17 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.3",
     "jsonwebtoken": "^9.0.3",
     "langchain": "^1.5.3",
     "mongodb": "^7.5.0",
     "mongoose": "^9.7.4",
     "zod": "^4.4.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.3.0"
   }
 }

@@ -1,57 +1,30 @@
-import dotenv from "dotenv";
+import "../src/config/env.js";
 import mongoose from "mongoose";
-import ClinicSetting from "../models/ClinicSetting.js";
-
-dotenv.config();
-
-await mongoose.connect(process.env.MONGODB_URL);
-
-await ClinicSetting.deleteMany();
-
-await ClinicSetting.create({
-  clinicName: "SafeSight Eye Care",
-
-  workingHours: {
-    open: "08:00 AM",
-    close: "05:00 PM",
-    openEveryday: true,
-  },
-
-  consultationFees: [
-    {
-      type: "New Patient",
-      fee: 300,
+import ClinicSetting from "../src/models/ClinicSetting.js";
+import { connectDb } from "../src/config/database.js";
+await connectDb();
+if (!(await ClinicSetting.exists({}))) {
+  if (
+    !process.env.CLINIC_PHONE ||
+    !process.env.CLINIC_EMAIL ||
+    !process.env.CLINIC_ADDRESS
+  )
+    throw new Error(
+      "Set CLINIC_PHONE, CLINIC_EMAIL and CLINIC_ADDRESS before seeding clinic details.",
+    );
+  await ClinicSetting.create({
+    clinicName: "SafeSight Eye Care",
+    address: process.env.CLINIC_ADDRESS,
+    contact: {
+      phone: process.env.CLINIC_PHONE,
+      email: process.env.CLINIC_EMAIL,
     },
-    {
-      type: "Checkup",
-      fee: 100,
-    },
-    {
-      type: "Charity",
-      fee: 0,
-    },
-  ],
-
-  appointmentUrl:
-    "https://safesighteyecare.in/appointment",
-
-  contact: {
-    phone: "+91XXXXXXXXXX",
-    email: "info@safesighteyecare.in",
-  },
-
-  address: "Thoubal, Manipur",
-
-  services: [
-    "Cataract Surgery",
-    "LASIK",
-    "Glaucoma",
-    "Retina",
-    "Squint",
-    "Contact Lens",
-  ],
-});
-
-console.log("✅ Clinic Setting Seeded");
-
-process.exit(0);
+    services: [],
+    consultationFees: [],
+    appointmentUrl: "/Appointment.html",
+  });
+  console.log(
+    "Clinic settings created. Set verified contact details in MongoDB.",
+  );
+} else console.log("Existing clinic settings retained.");
+await mongoose.disconnect();
