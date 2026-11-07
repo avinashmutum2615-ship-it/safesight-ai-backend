@@ -1,3 +1,7 @@
+# Connected application update
+
+Start with [SETUP.md](SETUP.md) for the current installation instructions, tested workflows, deployment settings and remaining requirements. The earlier overview below describes the project architecture; SETUP.md takes precedence where configuration differs.
+
 # 👁️ SafeSight AI – Multi-Agent Eye Clinic Management System
 
 > An AI-powered ophthalmology clinic management system built with **Node.js**, **Express.js**, **LangGraph**, **Google Gemini**, **MongoDB Atlas Vector Search**, and **Retrieval-Augmented Generation (RAG)**.

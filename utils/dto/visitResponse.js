@@ -1,41 +1,37 @@
 export default function visitResponse(visit) {
+  return {
+    id: visit._id,
 
-    return {
+    visitId: visit.visitId,
 
-        id: visit._id,
+    appointment: {
+      id: visit.appointment?._id,
+    },
 
-        visitId: visit.visitId,
+    patient: {
+      id: visit.patient?._id,
+      patientId: visit.patient?.patientId,
+      name: visit.patient?.name,
+      phone: visit.patient?.phone,
+    },
 
-        appointment: {
-            id: visit.appointment?._id
-        },
+    doctor: {
+      id: visit.doctor?._id,
+      name: visit.doctor?.userId?.name,
+    },
 
-        patient: {
-            id: visit.patient?._id,
-            patientId: visit.patient?.patientId,
-            name: visit.patient?.name,
-            phone: visit.patient?.phone
-        },
+    status: visit.status,
 
-        doctor: {
-            id: visit.doctor?._id,
-            name: visit.doctor?.name
-        },
+    checkedInAt: visit.checkedInAt,
 
-        status: visit.status,
+    startedAt: visit.startedAt,
 
-        checkedInAt: visit.checkedInAt,
+    completedAt: visit.completedAt,
 
-        startedAt: visit.startedAt,
+    notes: visit.notes,
 
-        completedAt: visit.completedAt,
+    createdAt: visit.createdAt,
 
-        notes: visit.notes,
-
-        createdAt: visit.createdAt,
-
-        updatedAt: visit.updatedAt
-
-    };
-
+    updatedAt: visit.updatedAt,
+  };
 }

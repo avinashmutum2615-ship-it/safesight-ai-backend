@@ -1,14 +1,10 @@
 import mongoose from "mongoose";
-
-
 export async function connectDb() {
-    try{
-        await mongoose.connect(process.env.MONGODB_URL);
-        
-        console.log("MongoDB connected successfully...!");
-    } catch (error) {
-        console.error("MongoDb connected failed..!!!", error.message);
-      
-        process.exit(1);
-    }
+  const uri = process.env.MONGODB_URI || process.env.MONGODB_URL;
+  if (!uri)
+    throw new Error(
+      "Set MONGODB_URI in .env (MongoDB Atlas or a local replica set).",
+    );
+  await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000 });
+  console.log("MongoDB connected.");
 }

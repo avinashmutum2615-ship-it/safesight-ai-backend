@@ -1,20 +1,12 @@
 import express from "express";
-
-import {
-    createPatient,
-    searchPatients,
-    getPatientById,
-} from "../../controllers/patient/patientController.js";
-
 const router = express.Router();
-
-// Register a new patient
-router.post("/", createPatient);
-
-// Search patients
-router.get("/search", searchPatients);
-
-// Get patient by ID
-router.get("/:id", getPatientById);
-
+router.use((req, res) =>
+  res
+    .status(403)
+    .json({
+      success: false,
+      message:
+        "Patient records require staff authentication. Use the appointment form to request a booking.",
+    }),
+);
 export default router;
